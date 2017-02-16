@@ -27,7 +27,7 @@ gem install philiprehberger-enum
 ## Usage
 
 ```ruby
-require 'philiprehberger/enum'
+require "philiprehberger/enum"
 
 class Status < Philiprehberger::Enum
   member :draft
@@ -113,8 +113,8 @@ Status::DRAFT.to_json  # => '{"name":"draft","ordinal":0,"value":null}'
 
 ```bash
 bundle install
-bundle exec rspec      # Run tests
-bundle exec rubocop    # Check code style
+bundle exec rspec
+bundle exec rubocop
 ```
 
 ## License
