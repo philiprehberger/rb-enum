@@ -3,6 +3,7 @@
 [![Tests](https://github.com/philiprehberger/rb-enum/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-enum/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-enum.svg)](https://rubygems.org/gems/philiprehberger-enum)
 [![License](https://img.shields.io/github/license/philiprehberger/rb-enum)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
 
 Type-safe enumerations with ordinals, custom values, and pattern matching
 
@@ -119,4 +120,4 @@ bundle exec rubocop
 
 ## License
 
-MIT
+[MIT](LICENSE)
