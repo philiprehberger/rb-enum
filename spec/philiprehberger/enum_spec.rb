@@ -246,6 +246,116 @@ RSpec.describe Philiprehberger::Enum do
     end
   end
 
+  describe 'Enumerable support' do
+    let(:color_class) do
+      Class.new(described_class) do
+        member :red, value: '#f00'
+        member :green, value: '#0f0'
+        member :blue, value: '#00f'
+      end
+    end
+
+    it 'yields each member via each' do
+      names = color_class.map(&:name)
+      expect(names).to eq(%i[red green blue])
+    end
+
+    it 'supports map' do
+      expect(color_class.map(&:name)).to eq(%i[red green blue])
+    end
+
+    it 'supports select' do
+      result = color_class.select { |m| m.ordinal > 0 }
+      expect(result.map(&:name)).to eq(%i[green blue])
+    end
+
+    it 'supports to_a' do
+      expect(color_class.to_a.size).to eq(3)
+      expect(color_class.to_a.first).to eq(color_class::RED)
+    end
+
+    it 'supports min and max' do
+      expect(color_class.min).to eq(color_class::RED)
+      expect(color_class.max).to eq(color_class::BLUE)
+    end
+  end
+
+  describe '.to_h' do
+    let(:http_class) do
+      Class.new(described_class) do
+        member :ok, value: 200
+        member :not_found, value: 404
+      end
+    end
+
+    it 'returns a hash of name symbols to values' do
+      expect(http_class.to_h).to eq({ ok: 200, not_found: 404 })
+    end
+
+    it 'returns nil values for members without custom values' do
+      klass = Class.new(described_class) { member :a }
+      expect(klass.to_h).to eq({ a: nil })
+    end
+  end
+
+  describe '.members_by_value' do
+    let(:http_class) do
+      Class.new(described_class) do
+        member :ok, value: 200
+        member :not_found, value: 404
+      end
+    end
+
+    it 'returns a hash of values to members' do
+      result = http_class.members_by_value
+      expect(result[200]).to eq(http_class::OK)
+      expect(result[404]).to eq(http_class::NOT_FOUND)
+    end
+  end
+
+  describe '.size / .count' do
+    let(:status_class) do
+      Class.new(described_class) do
+        member :a
+        member :b
+        member :c
+      end
+    end
+
+    it 'returns the number of members via size' do
+      expect(status_class.size).to eq(3)
+    end
+
+    it 'returns the number of members via count' do
+      expect(status_class.count).to eq(3)
+    end
+  end
+
+  describe 'case-insensitive from_name' do
+    let(:status_class) do
+      Class.new(described_class) do
+        member :draft
+        member :published
+      end
+    end
+
+    it 'finds a member by exact name' do
+      expect(status_class.from_name(:draft)).to eq(status_class::DRAFT)
+    end
+
+    it 'finds a member by uppercase string' do
+      expect(status_class.from_name('DRAFT')).to eq(status_class::DRAFT)
+    end
+
+    it 'finds a member by mixed-case string' do
+      expect(status_class.from_name('Draft')).to eq(status_class::DRAFT)
+    end
+
+    it 'returns nil for unknown name regardless of case' do
+      expect(status_class.from_name('UNKNOWN')).to be_nil
+    end
+  end
+
   describe 'multiple enum classes' do
     let(:color_class) do
       Class.new(described_class) do

@@ -62,6 +62,38 @@ Status.valid?(:draft)       # => true
 Status.valid?(:unknown)     # => false
 ```
 
+### Enumerable
+
+Enum classes include `Enumerable`, so you can iterate, map, select, etc.:
+
+```ruby
+Status.each { |member| puts member.name }
+Status.map(&:name)                # => [:draft, :published, :archived]
+Status.select { |m| m.ordinal > 0 } # => [PUBLISHED, ARCHIVED]
+Status.to_a                       # => [DRAFT, PUBLISHED, ARCHIVED]
+Status.min                        # => DRAFT
+```
+
+### Collection Methods
+
+```ruby
+Status.to_h              # => { draft: nil, published: nil, archived: nil }
+HttpCode.to_h            # => { ok: 200, not_found: 404, server_error: 500 }
+HttpCode.members_by_value # => { 200 => OK, 404 => NOT_FOUND, 500 => SERVER_ERROR }
+Status.size              # => 3
+Status.count             # => 3
+```
+
+### Case-Insensitive Lookup
+
+`from_name` tries an exact match first, then falls back to case-insensitive:
+
+```ruby
+Status.from_name(:draft)    # => Status::DRAFT (exact match)
+Status.from_name("DRAFT")   # => Status::DRAFT (case-insensitive)
+Status.from_name("Draft")   # => Status::DRAFT (case-insensitive)
+```
+
 ### Comparison
 
 Members are comparable by ordinal:
@@ -97,7 +129,11 @@ Status::DRAFT.to_json  # => '{"name":"draft","ordinal":0,"value":null}'
 |--------|-------------|
 | `.member(name, value: nil)` | Define a new enum member with optional custom value |
 | `.members` | Return all members in declaration order |
-| `.from_name(name)` | Look up a member by symbol or string name |
+| `.each` | Yield each member (includes `Enumerable`) |
+| `.to_h` | Return `{ name_symbol => value }` hash |
+| `.members_by_value` | Return `{ value => member }` reverse lookup hash |
+| `.size` / `.count` | Return the number of defined members |
+| `.from_name(name)` | Look up by name (case-insensitive fallback) |
 | `.from_string(string)` | Look up a member by string name |
 | `.from_value(val)` | Look up a member by custom value |
 | `.valid?(name)` | Check if a name is a valid member |
