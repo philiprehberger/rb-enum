@@ -356,6 +356,91 @@ RSpec.describe Philiprehberger::Enum do
     end
   end
 
+  describe '.fetch' do
+    let(:status_class) do
+      Class.new(described_class) do
+        member :draft
+        member :published
+      end
+    end
+
+    it 'returns a member by symbol name' do
+      expect(status_class.fetch(:draft)).to eq(status_class::DRAFT)
+    end
+
+    it 'returns a member by string name' do
+      expect(status_class.fetch('published')).to eq(status_class::PUBLISHED)
+    end
+
+    it 'returns a member via case-insensitive fallback' do
+      expect(status_class.fetch('DRAFT')).to eq(status_class::DRAFT)
+    end
+
+    it 'raises Error for unknown name' do
+      expect { status_class.fetch(:unknown) }.to raise_error(described_class::Error, /no member/)
+    end
+  end
+
+  describe '.fetch_by_value' do
+    let(:http_class) do
+      Class.new(described_class) do
+        member :ok, value: 200
+        member :not_found, value: 404
+      end
+    end
+
+    it 'returns a member by value' do
+      expect(http_class.fetch_by_value(200)).to eq(http_class::OK)
+    end
+
+    it 'raises Error for unknown value' do
+      expect { http_class.fetch_by_value(999) }.to raise_error(described_class::Error, /no member with value/)
+    end
+  end
+
+  describe '.names / .values' do
+    let(:http_class) do
+      Class.new(described_class) do
+        member :ok, value: 200
+        member :not_found, value: 404
+      end
+    end
+
+    it 'returns names in declaration order' do
+      expect(http_class.names).to eq(%i[ok not_found])
+    end
+
+    it 'returns values in declaration order' do
+      expect(http_class.values).to eq([200, 404])
+    end
+
+    it 'returns a frozen names array' do
+      expect(http_class.names).to be_frozen
+    end
+
+    it 'returns a frozen values array' do
+      expect(http_class.values).to be_frozen
+    end
+  end
+
+  describe '.first / .last' do
+    let(:status_class) do
+      Class.new(described_class) do
+        member :draft
+        member :published
+        member :archived
+      end
+    end
+
+    it 'returns the first declared member' do
+      expect(status_class.first).to eq(status_class::DRAFT)
+    end
+
+    it 'returns the last declared member' do
+      expect(status_class.last).to eq(status_class::ARCHIVED)
+    end
+  end
+
   describe 'multiple enum classes' do
     let(:color_class) do
       Class.new(described_class) do

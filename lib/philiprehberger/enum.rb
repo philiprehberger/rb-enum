@@ -168,6 +168,56 @@ module Philiprehberger
         member_registry.values.find { |m| m.value == val }
       end
 
+      # Look up a member by name, raising if not found
+      #
+      # @param name [Symbol, String] the member name
+      # @return [Enum] the member
+      # @raise [Error] if the name is not a valid member
+      def fetch(name)
+        from_name(name) || raise(Error, "no member #{name.inspect} on #{self}")
+      end
+
+      # Look up a member by value, raising if not found
+      #
+      # @param val [Object] the value to search for
+      # @return [Enum] the member
+      # @raise [Error] if the value is not found
+      def fetch_by_value(val)
+        from_value(val) || raise(Error, "no member with value #{val.inspect} on #{self}")
+      end
+
+      # Return all member names in declaration order
+      #
+      # @return [Array<Symbol>] frozen array of member names
+      def names
+        freeze_members!
+        member_registry.keys.freeze
+      end
+
+      # Return all member values in declaration order
+      #
+      # @return [Array<Object>] frozen array of member values
+      def values
+        freeze_members!
+        member_registry.values.map(&:value).freeze
+      end
+
+      # Return the first declared member
+      #
+      # @return [Enum, nil] the first member, or nil if empty
+      def first
+        freeze_members!
+        member_registry.values.first
+      end
+
+      # Return the last declared member
+      #
+      # @return [Enum, nil] the last member, or nil if empty
+      def last
+        freeze_members!
+        member_registry.values.last
+      end
+
       # Check if a name is a valid member
       #
       # @param name [Symbol, String] the member name
