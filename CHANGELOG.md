@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-04-16
+
+### Added
+- `Enum.slice(*names)` returns an array of members matching the given symbol names, silently skipping unknown names
+- `Enum.sample(n = nil)` returns a random member when called without argument, or an array of n random members when called with an integer
+
 ## [0.3.0] - 2026-04-09
 
 ### Added

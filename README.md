@@ -104,6 +104,25 @@ Status.first     # => Status::DRAFT
 Status.last      # => Status::ARCHIVED
 ```
 
+### Slice
+
+`slice` returns members matching the given names, silently skipping any that are unknown:
+
+```ruby
+Status.slice(:draft, :archived)          # => [Status::DRAFT, Status::ARCHIVED]
+Status.slice(:draft, :nonexistent)       # => [Status::DRAFT]
+Status.slice(:archived, :draft)          # => [Status::ARCHIVED, Status::DRAFT]
+```
+
+### Sample
+
+`sample` returns a random member. Pass an integer to get an array:
+
+```ruby
+Status.sample       # => Status::DRAFT  (random)
+Status.sample(2)    # => [Status::PUBLISHED, Status::ARCHIVED]  (random)
+```
+
 ### Case-Insensitive Lookup
 
 `from_name` tries an exact match first, then falls back to case-insensitive:
@@ -161,6 +180,8 @@ Status::DRAFT.to_json  # => '{"name":"draft","ordinal":0,"value":null}'
 | `.from_name(name)` | Look up by name (case-insensitive fallback) |
 | `.from_string(string)` | Look up a member by string name |
 | `.from_value(val)` | Look up a member by custom value |
+| `.slice(*names)` | Return members matching the given symbol names, skipping unknowns |
+| `.sample(n = nil)` | Return a random member, or array of n random members |
 | `.valid?(name)` | Check if a name is a valid member |
 | `#name` | Return the member name as a symbol |
 | `#ordinal` | Return the ordinal position |
