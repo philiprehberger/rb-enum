@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Type-safe enumerations with ordinals, custom values, and pattern matching'
   spec.description   = 'Define type-safe enums in Ruby with automatic ordinals, custom values, ' \
-                        'lookup methods, and Ruby 3.x pattern matching support. A cleaner alternative ' \
-                        'to ad-hoc constants and symbol sets.'
+                       'lookup methods, and Ruby 3.x pattern matching support. A cleaner alternative ' \
+                       'to ad-hoc constants and symbol sets.'
   spec.homepage      = 'https://github.com/philiprehberger/rb-enum'
   spec.license       = 'MIT'
 
