@@ -3,7 +3,6 @@
 require 'spec_helper'
 require 'json'
 
-# rubocop:disable Lint/ConstantDefinitionInBlock
 RSpec.describe Philiprehberger::Enum do
   it 'has a version number' do
     expect(described_class::VERSION).not_to be_nil
@@ -166,8 +165,9 @@ RSpec.describe Philiprehberger::Enum do
       expect(priority_class::HIGH).to be > priority_class::MEDIUM
     end
 
-    it 'considers equal ordinals as equal' do
-      expect(priority_class::MEDIUM <=> priority_class::MEDIUM).to eq(0)
+    it 'considers same member as equal' do
+      member = priority_class::MEDIUM
+      expect(member <=> member).to eq(0) # rubocop:disable Lint/BinaryOperatorWithIdenticalOperands
     end
 
     it 'returns nil when comparing different enum classes' do
@@ -272,4 +272,3 @@ RSpec.describe Philiprehberger::Enum do
     end
   end
 end
-# rubocop:enable Lint/ConstantDefinitionInBlock
