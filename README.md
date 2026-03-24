@@ -15,7 +15,7 @@ Type-safe enumerations with ordinals, custom values, and pattern matching
 Add to your Gemfile:
 
 ```ruby
-gem 'philiprehberger-enum'
+gem "philiprehberger-enum"
 ```
 
 Or install directly:
