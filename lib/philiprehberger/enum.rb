@@ -75,6 +75,17 @@ module Philiprehberger
     end
 
     class << self
+      include Enumerable
+
+      # Yield each member in declaration order
+      #
+      # @yield [Enum] each member
+      # @return [Enumerator] if no block given
+      def each(&)
+        freeze_members!
+        member_registry.values.each(&)
+      end
+
       # Define a new member on this enum class
       #
       # @param name [Symbol] the member name
@@ -104,13 +115,40 @@ module Philiprehberger
         member_registry.values.freeze
       end
 
-      # Look up a member by its name
+      # Return a hash of name symbols to values
+      #
+      # @return [Hash{Symbol => Object}] name => value pairs
+      def to_h
+        freeze_members!
+        member_registry.transform_values(&:value)
+      end
+
+      # Return a reverse lookup hash of values to members
+      #
+      # @return [Hash{Object => Enum}] value => member pairs
+      def members_by_value
+        freeze_members!
+        member_registry.each_value.to_h { |m| [m.value, m] }
+      end
+
+      # Return the number of defined members
+      #
+      # @return [Integer] the member count
+      def size
+        freeze_members!
+        member_registry.size
+      end
+
+      alias count size
+
+      # Look up a member by its name, with case-insensitive fallback
       #
       # @param name [Symbol, String] the member name
       # @return [Enum, nil] the member, or nil if not found
       def from_name(name)
         freeze_members!
-        member_registry[name.to_sym]
+        key = name.to_sym
+        member_registry[key] || member_registry.values.find { |m| m.name.to_s.downcase == key.to_s.downcase }
       end
 
       # Look up a member by its string representation

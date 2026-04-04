@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-04-03
+
+### Added
+- Include `Enumerable` at the class level with `each` yielding each member (`map`, `select`, `to_a`, etc.)
+- `Enum.to_h` returns `{ name_symbol => value }` hash of all members
+- `Enum.members_by_value` returns `{ value => member }` reverse lookup hash
+- `Enum.size` / `Enum.count` returns the number of defined members
+
+### Changed
+- `Enum.from_name` now falls back to case-insensitive matching when exact match fails
+
 ## [0.1.6] - 2026-03-31
 
 ### Added
