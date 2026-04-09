@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-09
+
+### Added
+- `Enum.fetch(name)` strict lookup that raises `Error` if the name is not a member (case-insensitive fallback)
+- `Enum.fetch_by_value(val)` strict value lookup that raises `Error` if no member has the given value
+- `Enum.names` returns a frozen array of all member name symbols in declaration order
+- `Enum.values` returns a frozen array of all member values in declaration order
+- `Enum.first` / `Enum.last` return the first and last declared members
+
 ## [0.2.0] - 2026-04-03
 
 ### Added

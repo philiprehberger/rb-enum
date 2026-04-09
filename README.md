@@ -84,6 +84,26 @@ Status.size              # => 3
 Status.count             # => 3
 ```
 
+### Strict Lookup
+
+`fetch` and `fetch_by_value` raise an error instead of returning `nil`:
+
+```ruby
+Status.fetch(:draft)          # => Status::DRAFT
+Status.fetch(:unknown)        # raises Philiprehberger::Enum::Error
+HttpCode.fetch_by_value(200)  # => HttpCode::OK
+HttpCode.fetch_by_value(999)  # raises Philiprehberger::Enum::Error
+```
+
+### Names, Values, First & Last
+
+```ruby
+HttpCode.names   # => [:ok, :not_found, :server_error]
+HttpCode.values  # => [200, 404, 500]
+Status.first     # => Status::DRAFT
+Status.last      # => Status::ARCHIVED
+```
+
 ### Case-Insensitive Lookup
 
 `from_name` tries an exact match first, then falls back to case-insensitive:
@@ -133,6 +153,11 @@ Status::DRAFT.to_json  # => '{"name":"draft","ordinal":0,"value":null}'
 | `.to_h` | Return `{ name_symbol => value }` hash |
 | `.members_by_value` | Return `{ value => member }` reverse lookup hash |
 | `.size` / `.count` | Return the number of defined members |
+| `.names` | Return a frozen array of member name symbols |
+| `.values` | Return a frozen array of member values |
+| `.first` / `.last` | Return the first or last declared member |
+| `.fetch(name)` | Strict lookup by name; raises `Error` if not found |
+| `.fetch_by_value(val)` | Strict lookup by value; raises `Error` if not found |
 | `.from_name(name)` | Look up by name (case-insensitive fallback) |
 | `.from_string(string)` | Look up a member by string name |
 | `.from_value(val)` | Look up a member by custom value |
