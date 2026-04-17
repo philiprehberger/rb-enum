@@ -441,6 +441,69 @@ RSpec.describe Philiprehberger::Enum do
     end
   end
 
+  describe '.slice' do
+    let(:status_class) do
+      Class.new(described_class) do
+        member :draft
+        member :published
+        member :archived
+      end
+    end
+
+    it 'returns members matching the given names' do
+      result = status_class.slice(:draft, :archived)
+      expect(result).to eq([status_class::DRAFT, status_class::ARCHIVED])
+    end
+
+    it 'silently skips unknown names' do
+      result = status_class.slice(:draft, :unknown)
+      expect(result).to eq([status_class::DRAFT])
+    end
+
+    it 'returns an empty array when no names match' do
+      expect(status_class.slice(:missing)).to eq([])
+    end
+
+    it 'returns members in the given argument order' do
+      result = status_class.slice(:archived, :draft)
+      expect(result.map(&:name)).to eq(%i[archived draft])
+    end
+  end
+
+  describe '.sample' do
+    let(:status_class) do
+      Class.new(described_class) do
+        member :draft
+        member :published
+        member :archived
+      end
+    end
+
+    it 'returns a single member when called without argument' do
+      result = status_class.sample
+      expect(result).to be_a(status_class)
+    end
+
+    it 'returns a member that belongs to the enum' do
+      expect(status_class.members).to include(status_class.sample)
+    end
+
+    it 'returns an array when called with an integer argument' do
+      result = status_class.sample(2)
+      expect(result).to be_an(Array)
+      expect(result.size).to eq(2)
+    end
+
+    it 'returns only valid members when called with an argument' do
+      result = status_class.sample(2)
+      result.each { |m| expect(m).to be_a(status_class) }
+    end
+
+    it 'returns an empty array when 0 is given' do
+      expect(status_class.sample(0)).to eq([])
+    end
+  end
+
   describe 'multiple enum classes' do
     let(:color_class) do
       Class.new(described_class) do

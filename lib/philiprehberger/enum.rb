@@ -227,6 +227,24 @@ module Philiprehberger
         member_registry.key?(name.to_sym)
       end
 
+      # Return members matching the given symbol names, silently skipping unknown names
+      #
+      # @param names [Array<Symbol>] the member names to look up
+      # @return [Array<Enum>] array of matching members in the given order
+      def slice(*names)
+        freeze_members!
+        names.filter_map { |n| member_registry[n.to_sym] }
+      end
+
+      # Return a random member or array of random members
+      #
+      # @param n [Integer, nil] number of members to return; nil returns a single member
+      # @return [Enum, Array<Enum>] single member if n is nil, array of n members otherwise
+      def sample(n = nil)
+        freeze_members!
+        n.nil? ? member_registry.values.sample : member_registry.values.sample(n)
+      end
+
       private
 
       def inherited(subclass)
