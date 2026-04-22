@@ -398,6 +398,51 @@ RSpec.describe Philiprehberger::Enum do
     end
   end
 
+  describe '.from_ordinal' do
+    let(:status_class) do
+      Class.new(described_class) do
+        member :draft
+        member :published
+        member :archived
+      end
+    end
+
+    it 'finds a member at a valid ordinal' do
+      expect(status_class.from_ordinal(0)).to eq(status_class::DRAFT)
+      expect(status_class.from_ordinal(2)).to eq(status_class::ARCHIVED)
+    end
+
+    it 'returns nil for a negative ordinal' do
+      expect(status_class.from_ordinal(-1)).to be_nil
+    end
+
+    it 'returns nil for an out-of-range ordinal' do
+      expect(status_class.from_ordinal(99)).to be_nil
+    end
+
+    it 'returns nil for a non-integer ordinal' do
+      expect(status_class.from_ordinal('0')).to be_nil
+    end
+  end
+
+  describe '.fetch_by_ordinal' do
+    let(:status_class) do
+      Class.new(described_class) do
+        member :draft
+        member :published
+        member :archived
+      end
+    end
+
+    it 'returns a member at a valid ordinal' do
+      expect(status_class.fetch_by_ordinal(1)).to eq(status_class::PUBLISHED)
+    end
+
+    it 'raises Error with a descriptive message for an out-of-range ordinal' do
+      expect { status_class.fetch_by_ordinal(99) }.to raise_error(described_class::Error, /no member at ordinal/)
+    end
+  end
+
   describe '.names / .values' do
     let(:http_class) do
       Class.new(described_class) do

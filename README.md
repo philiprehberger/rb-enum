@@ -180,6 +180,8 @@ Status::DRAFT.to_json  # => '{"name":"draft","ordinal":0,"value":null}'
 | `.from_name(name)` | Look up by name (case-insensitive fallback) |
 | `.from_string(string)` | Look up a member by string name |
 | `.from_value(val)` | Look up a member by custom value |
+| `.from_ordinal(ord)` | Look up a member by ordinal position (returns nil if out of range) |
+| `.fetch_by_ordinal(ord)` | Same as from_ordinal but raises Error if not found |
 | `.slice(*names)` | Return members matching the given symbol names, skipping unknowns |
 | `.sample(n = nil)` | Return a random member, or array of n random members |
 | `.valid?(name)` | Check if a name is a valid member |
