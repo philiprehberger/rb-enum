@@ -186,6 +186,24 @@ module Philiprehberger
         from_value(val) || raise(Error, "no member with value #{val.inspect} on #{self}")
       end
 
+      # Look up a member by its ordinal position
+      #
+      # @param ord [Integer] the ordinal position (0-indexed)
+      # @return [Enum, nil] the member, or nil if the ordinal is out of range
+      def from_ordinal(ord)
+        freeze_members!
+        member_registry.values[ord] if ord.is_a?(Integer) && ord >= 0
+      end
+
+      # Look up a member by ordinal, raising if not found
+      #
+      # @param ord [Integer] the ordinal position
+      # @return [Enum] the member
+      # @raise [Error] if the ordinal is not a valid member
+      def fetch_by_ordinal(ord)
+        from_ordinal(ord) || raise(Error, "no member at ordinal #{ord.inspect} on #{self}")
+      end
+
       # Return all member names in declaration order
       #
       # @return [Array<Symbol>] frozen array of member names

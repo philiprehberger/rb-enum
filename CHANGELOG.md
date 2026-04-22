@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-04-22
+
+### Added
+- `Enum.from_ordinal(ord)` — look up a member by its ordinal position, returning nil if out of range.
+- `Enum.fetch_by_ordinal(ord)` — same lookup that raises `Error` if the ordinal is out of range.
+
 ## [0.4.0] - 2026-04-16
 
 ### Added
